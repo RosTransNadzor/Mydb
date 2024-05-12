@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MessagePack" Version="2.6.100-alpha" />
+      <PackageReference Include="OneOf" Version="3.0.263" />
+      <PackageReference Include="OneOf.SourceGenerator" Version="3.0.263" />
+    </ItemGroup>
+
 </Project>
