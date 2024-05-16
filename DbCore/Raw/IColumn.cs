@@ -1,3 +1,6 @@
 ﻿namespace DbCore.Raw;
 
-public interface IColumn;
+public interface IColumn
+{
+    public IColumn CreateCopy();
+}

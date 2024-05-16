@@ -10,6 +10,8 @@
       <PackageReference Include="MessagePack" Version="2.6.100-alpha" />
       <PackageReference Include="OneOf" Version="3.0.263" />
       <PackageReference Include="OneOf.SourceGenerator" Version="3.0.263" />
+      <PackageReference Include="System.Reactive" Version="6.0.1-preview.1" />
+      <PackageReference Include="System.Reactive.Linq" Version="6.0.1-preview.1" />
     </ItemGroup>
 
 </Project>

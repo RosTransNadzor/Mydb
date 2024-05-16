@@ -31,7 +31,7 @@ public record Schema
         for (int i = 0; i < existing.Columns.Length; i++)
         {
             if (vals.ContainsKey(Columns.ElementAt(i).Key))
-                updatedCols[i] = vals.ElementAt(i).Value;
+                updatedCols[i] = vals[Columns.ElementAt(i).Key];
             else
                 updatedCols[i] = existing.Columns[i];
         }

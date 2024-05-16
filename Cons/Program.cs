@@ -3,6 +3,7 @@ using DbCore.Raw;
 using DbCore.Schema;
 using DbCore.Table;
 using DbCore.Table.Constraints;
+using DbCore.Table.Operations;
 
 namespace Cons;
 
@@ -23,34 +24,71 @@ static class Program
         {
             Columns = new Dictionary<string, SchemaColumn>
             {
-                ["Age"] = new SchemaColumn(new ColType{IsNullable = false,Type = DbType.Int32})
+                ["Age"] = new SchemaColumn(new ColType{IsNullable = true,Type = DbType.Int32})
+                {
+                    Constraints = [new AutoIncrementConstraint()]
+                },
+                ["Name"] = new SchemaColumn(new ColType{IsNullable = true,Type = DbType.String})
                 {
                     Constraints = Array.Empty<IConstraint>()
                 },
-                ["Name"] = new SchemaColumn(new ColType{IsNullable = false,Type = DbType.String})
+                ["JobID"] = new SchemaColumn(new ColType{IsNullable = true,Type = DbType.Int32},
+                    new RowColumn<int?>{Value = 635})
                 {
-                    Constraints = Array.Empty<IConstraint>()
-                },
-                ["JobID"] = new SchemaColumn(new ColType{IsNullable = true,Type = DbType.Int32},new RowColumn<int>{Value = 635})
-                {
-                    Constraints = Array.Empty<IConstraint>()
+                    Constraints = [new UniqueConstraint()]
                 }
             }
         };
         Database db = new Database();
-        Table table = new Table(new RowValidator(new TableManager(db)))
+        db.AddTable("Person", schema);
+        Table table = db.GetByTableName("Person");
+        table.ChangesObservable.Subscribe(to =>
         {
-            Schema = schema
-        };
+            switch (to.Operation)
+            {
+                case RowInserted inserted:
+                {
+                    Console.WriteLine($"Row inserted {inserted.InsertedRow}");
+                    break;
+                }
+                case RowUpdated updated:
+                    Console.WriteLine($"Row updated {updated.UpdatedRow} with id {updated.RowId}");
+                    break;
+                case RowDeleted deleted:
+                    Console.WriteLine($"Row deleted with id {deleted.RowId}");
+                    break;
+            }
+        });
         table.InsertValues(new Dictionary<string, IColumn>
         {
-            ["Age"] = new RowColumn<int>{Value = 5}
+            ["Age"] = new RowColumn<int?>{Value = null},
+            ["JobID"] = new RowColumn<int?>{Value = 32}
         });
         table.UpdateRow(0,new Dictionary<string, IColumn>
         {
-            ["Age"] = new RowColumn<int?>{Value = null},
             ["Name"] = new RowColumn<string>{Value = "Fred"}
         });
-        Console.WriteLine("end");
+        table.InsertValues(new Dictionary<string, IColumn>
+        {
+            ["JobID"] = new RowColumn<int>{Value = 72}
+        });
+        table.UpdateRow(1,new Dictionary<string, IColumn>
+        {
+            ["Name"] = new RowColumn<string>{Value = "Mark"}
+        });
+        table.UpdateRow(1,new Dictionary<string, IColumn>
+        {
+            ["JobID"] = new RowColumn<int?>{Value = null}
+        });
+        table.DeleteRow(0);
+        table.InsertValues(new Dictionary<string, IColumn>
+        {
+            ["JobID"] = new RowColumn<int?>{Value = 62}
+        });
+        table.InsertValues(new Dictionary<string, IColumn>
+        {
+            ["JobID"] = new RowColumn<int?>{Value = 92}
+        });
+        table.Print();
     }
 }

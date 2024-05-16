@@ -38,4 +38,25 @@ public class DbTypeHelper
                 throw new Exception("Undocumented DbType");
         }
     }
+
+    public static bool Compare(IColumn col1, IColumn col2)
+    {
+        switch (col1)
+        {
+            case RowColumn<int> int1 when col2 is RowColumn<int> int2:
+                return int1.Value == int2.Value;
+            case RowColumn<int> int1 when col2 is RowColumn<int?> int2:
+                return int1.Value == int2.Value;
+            
+            case RowColumn<int?> int1 when col2 is RowColumn<int> int2:
+                return int1.Value == int2.Value;
+            case RowColumn<int?> int1 when col2 is RowColumn<int?> int2:
+                return int1.Value == int2.Value;
+            
+            case RowColumn<string> str1 when col2 is RowColumn<string> str2:
+                return str2.Value == str1.Value;
+            default:
+                return false;
+        }
+    }
 }

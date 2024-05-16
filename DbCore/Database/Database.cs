@@ -7,8 +7,8 @@ public class Database
     public Database() {}
     public bool AddTable(string tableName,Schema tableSchema)
     {
-        RowValidator validator = new RowValidator(new TableManager(this));
-        Table t = new Table(validator)
+        TableManager manager = new TableManager(this);
+        Table t = new Table(manager)
         {
             Schema = tableSchema
         };
@@ -16,10 +16,9 @@ public class Database
             return false;
         return true;
     }
-
-    public Table? GetByTableName(string name)
+    
+    public Table GetByTableName(string name)
     {
-        tables.TryGetValue(name, out Table? table);
-        return table;
+        return tables[name];
     }
 }

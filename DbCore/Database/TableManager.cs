@@ -15,7 +15,7 @@ public class TableManager
         Current = current;
     }
 
-    public Table? GetTableByName(string name)
+    public Table GetTableByName(string name)
     {
         if (name == "current" && Current is not null)
             return Current;

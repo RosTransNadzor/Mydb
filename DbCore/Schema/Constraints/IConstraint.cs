@@ -1,8 +1,6 @@
-﻿using DbCore.Raw;
-
-namespace DbCore.Table.Constraints;
+﻿namespace DbCore.Table.Constraints;
 
 public interface IConstraint
 {
-    public bool ApplyConstraint(IColumn column);
+    public bool ApplyConstraint(ApplyConstrantInfo info);
 }

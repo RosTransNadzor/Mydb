@@ -7,19 +7,20 @@ public record SchemaColumn
 {
     public required IConstraint[] Constraints { get; init; } 
     public ColType Type { get;}
-    public IColumn DefaultValue { get; }
+    private readonly IColumn defaultValue;
+    public IColumn DefaultValue => defaultValue.CreateCopy();
 
     public SchemaColumn(ColType type)
     {
         Type = type;
-        DefaultValue = DbTypeHelper.GetDefaultValue(Type);
+        defaultValue = DbTypeHelper.GetDefaultValue(Type);
     }
 
-    public SchemaColumn(ColType type,IColumn defaulValue)
+    public SchemaColumn(ColType type,IColumn _defaulValue)
     {
         Type = type;
-        DefaultValue = defaulValue;
-        if(!DbTypeHelper.IsHasCorrectType(Type, defaulValue))
+        defaultValue = _defaulValue;
+        if(!DbTypeHelper.IsHasCorrectType(Type, _defaulValue))
         {
             throw new Exception("schema collumn has incorrect type");
         }
